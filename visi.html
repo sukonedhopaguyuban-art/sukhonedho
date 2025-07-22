@@ -1,35 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Misi & Visi - Paguyuban Sukho Nedho</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Visi & Misi - Sukho Nedho</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #fff8e1;
+      margin: 0;
+      padding: 0;
+      background: #f2f5f3;
       color: #333;
-      padding: 20px;
     }
-    a {
+    header {
+      background: #020945;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
       text-decoration: none;
-      color: #000;
-      display: inline-block;
-      margin-top: 20px;
+      margin: 0 10px;
+      font-size: 18px;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    footer {
+      background: #020945;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+
+    @media screen and (max-width: 600px) {
+      header, main, footer {
+        padding: 15px;
+      }
+      nav a {
+        display: block;
+        margin: 10px 0;
+        font-size: 20px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Misi & Visi</h1>
+  <header>
+    <h1>Sukho Nedho</h1>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="visi.html">Visi Misi</a>
+      <a href="galeri.html">Galeri</a>
+      <a href="kontak.html">Kontak</a>
+    </nav>
+  </header>
 
-  <h2>Visi</h2>
-  <p>Mewujudkan masyarakat yang peduli, gotong royong, dan berdaya melalui kegiatan sosial yang berkelanjutan.</p>
+  <main>
+    <h2>Visi</h2>
+    <p>Menjadi wadah kebersamaan masyarakat untuk menciptakan perubahan positif di lingkungan sosial.</p>
 
-  <h2>Misi</h2>
-  <ul>
-    <li>Mengadakan kegiatan sosial untuk membantu masyarakat yang membutuhkan</li>
-    <li>Mendorong kepedulian terhadap pendidikan dan lingkungan</li>
-    <li>Menjadi wadah silaturahmi dan kolaborasi antar anggota komunitas</li>
-  </ul>
+    <h2>Misi</h2>
+    <ul>
+      <li>Mendorong kegiatan sosial dan kemanusiaan</li>
+      <li>Membangun jaringan solidaritas antaranggota</li>
+      <li>Membantu mereka yang membutuhkan tanpa memandang latar belakang</li>
+    </ul>
+  </main>
 
-  <a href="index.html">← Kembali ke Beranda</a>
+  <footer>
+    &copy; 2025 Sukho Nedho. All rights reserved.
+  </footer>
 </body>
 </html>
