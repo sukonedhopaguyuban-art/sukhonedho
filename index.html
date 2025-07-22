@@ -2,46 +2,46 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Paguyuban Sukho Nedho</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Beranda - Sukho Nedho</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
       background-color: #f2f5f3;
-      color: #333;
     }
     .navbar {
       background-color: #020945;
     }
-    .navbar-brand,
-    .nav-link {
-      color: #a3a103 !important;
-      font-weight: 500;
+    .navbar a {
+      color: white !important;
     }
-    .nav-link:hover {
-      text-decoration: underline;
+    header {
+      background: linear-gradient(#020945, #031469);
+      color: white;
+      padding: 80px 20px;
+      text-align: center;
     }
-    h1, h2 {
-      color: #020945;
+    footer {
+      background-color: #020945;
+      color: white;
+      padding: 15px 0;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg">
+
+  <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-      <a class="navbar-brand" href="#">
-        <img src="logo_sukho_nedh_png.png" alt="Logo" height="60" class="me-2">
-        Paguyuban Sukho Nedho
-      </a>
-      <button class="navbar-toggler text-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon text-light"></span>
+      <a class="navbar-brand" href="#">Sukho Nedho</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
-          <li class="nav-item"><a class="nav-link" href="tentang.html">Tentang Kami</a></li>
-          <li class="nav-item"><a class="nav-link" href="visi.html">Misi & Visi</a></li>
+          <li class="nav-item"><a class="nav-link active" href="index.html">Beranda</a></li>
+          <li class="nav-item"><a class="nav-link" href="tentang.html">Tentang</a></li>
+          <li class="nav-item"><a class="nav-link" href="visi.html">Visi Misi</a></li>
           <li class="nav-item"><a class="nav-link" href="galeri.html">Galeri</a></li>
           <li class="nav-item"><a class="nav-link" href="kontak.html">Kontak</a></li>
         </ul>
@@ -49,14 +49,49 @@
     </div>
   </nav>
 
-  <!-- Main content -->
+  <header>
+    <div class="container">
+      <h1 class="display-4">Selamat Datang di Paguyuban Sukho Nedho</h1>
+      <p class="lead">Bersama dalam kebersamaan, bergerak untuk kebaikan.</p>
+    </div>
+  </header>
+
   <main class="container my-5">
-    <h2 class="text-center">Selamat Datang!</h2>
-    <p class="text-center">Ini adalah website resmi Paguyuban Sukho Nedho, komunitas yang bergerak di bidang sosial.</p>
-    <p class="text-center fw-bold fst-italic">Urip Sak Madyo Ning Migunani</p>
+    <div class="row text-center">
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Tentang Kami</h5>
+            <p class="card-text">Kenali lebih dekat siapa kami dan tujuan kami membentuk paguyuban ini.</p>
+            <a href="tentang.html" class="btn btn-primary">Selengkapnya</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Visi & Misi</h5>
+            <p class="card-text">Kami bergerak dengan visi dan misi yang kuat untuk mencapai tujuan bersama.</p>
+            <a href="visi.html" class="btn btn-primary">Lihat Visi Misi</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Galeri</h5>
+            <p class="card-text">Lihat dokumentasi kegiatan dan momen kebersamaan kami.</p>
+            <a href="galeri.html" class="btn btn-primary">Lihat Galeri</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
-  <!-- Bootstrap JS (untuk menu responsif) -->
+  <footer>
+    &copy; 2025 Sukho Nedho. All rights reserved.
+  </footer>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
