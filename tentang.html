@@ -1,44 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tentang Kami - Paguyuban Sukho Nedho</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tentang Kami - Sukho Nedho</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #fff8e1;
-      padding: 20px;
+      margin: 0;
+      padding: 0;
+      background: #f2f5f3;
       color: #333;
     }
-    a {
-      text-decoration: none;
-      color: #000;
-      display: inline-block;
-      margin-top: 20px;
+    header {
+      background: #020945;
+      color: white;
+      padding: 20px;
+      text-align: center;
     }
-    header, main, footer {
-    max-width: 800px;
-    margin: auto;
-    padding: 10px;
-  }
+    main {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    footer {
+      background: #020945;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 18px;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
 
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  nav a {
-    display: inline-block;
-    margin: 5px;
-    font-size: 18px;
-  }
+    /* RESPONSIF UNTUK HP */
+    @media screen and (max-width: 600px) {
+      header, main, footer {
+        padding: 15px;
+      }
+      nav a {
+        display: block;
+        margin: 10px 0;
+        font-size: 20px;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Tentang Kami</h1>
-  <p>Paguyuban Sukho Nedho adalah komunitas sosial yang berdiri sejak 2021. Kami bergerak dalam bidang kemanusiaan, pendidikan, dan lingkungan dengan semangat gotong royong dan kebersamaan.</p>
-  <p>Visi kami adalah menciptakan masyarakat yang saling membantu, peduli, dan berdaya. Kami terbuka untuk semua lapisan masyarakat yang ingin bergabung dalam kegiatan sosial yang positif.</p>
+  <header>
+    <h1>Sukho Nedho</h1>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="visi.html">Visi Misi</a>
+      <a href="galeri.html">Galeri</a>
+      <a href="kontak.html">Kontak</a>
+    </nav>
+  </header>
 
-  <a href="index.html">← Kembali ke Beranda</a>
+  <main>
+    <h2>Tentang Kami</h2>
+    <p>Paguyuban Sukho Nedho adalah komunitas sosial yang bergerak dalam bidang kemanusiaan, kebersamaan, dan gotong royong.</p>
+    <p>Kami berdiri atas dasar kepedulian antar sesama dan membangun jaringan solidaritas antar anggota masyarakat dari berbagai latar belakang.</p>
+  </main>
+
+  <footer>
+    &copy; 2025 Sukho Nedho. All rights reserved.
+  </footer>
 </body>
 </html>
