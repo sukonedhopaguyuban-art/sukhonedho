@@ -1,65 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Paguyuban Sukho Nedho</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f2f5f3;
-      color: #a3a103;
-      margin: 0;
-      padding: 0;
+      background-color: #f2f5f3;
+      color: #333;
     }
-    header {
-      background: #020945;
-      padding: 20px;
-      text-align: center;
+    .navbar {
+      background-color: #020945;
     }
-    nav a {
-      margin: 0 10px;
-      text-decoration: none;
-      color: #a3a103;
+    .navbar-brand,
+    .nav-link {
+      color: #a3a103 !important;
+      font-weight: 500;
     }
-    img {
-  max-width: 100%;
-  height: auto;
-}
-
-main, header, footer {
-  max-width: 800px;
-  margin: auto;
-  padding: 10px;
-}
-
-nav a {
-  display: inline-block;
-  margin: 5px;
-  font-size: 18px;
-}
-
-    main {
-      padding: 20px;
+    .nav-link:hover {
+      text-decoration: underline;
+    }
+    h1, h2 {
+      color: #020945;
     }
   </style>
 </head>
 <body>
-  <header>
-      <img src="logo_sukho_nedh_png.png" alt="Logo Paguyuban" style="height: 100px;">
-    <h1>Paguyuban Sukho Nedho</h1>
-    <nav>
-      
-  <a href="index.html">Beranda</a>
-  <a href="tentang.html">Tentang Kami</a>
-  <a href="visi.html">Misi & Visi</a>
-  <a href="galeri.html">Galeri</a>
-  <a href="kontak.html">Kontak</a>
-</nav>
-      
-  </header>
-  <main>
-    <h2>Selamat Datang!</h2>
-    <p>Ini adalah website resmi Paguyuban Sukho Nedho, komunitas yang bergerak di bidang sosial.<br>Urip Sak Madyo Ning Migunani</p>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="logo_sukho_nedh_png.png" alt="Logo" height="60" class="me-2">
+        Paguyuban Sukho Nedho
+      </a>
+      <button class="navbar-toggler text-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon text-light"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+          <li class="nav-item"><a class="nav-link" href="tentang.html">Tentang Kami</a></li>
+          <li class="nav-item"><a class="nav-link" href="visi.html">Misi & Visi</a></li>
+          <li class="nav-item"><a class="nav-link" href="galeri.html">Galeri</a></li>
+          <li class="nav-item"><a class="nav-link" href="kontak.html">Kontak</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="container my-5">
+    <h2 class="text-center">Selamat Datang!</h2>
+    <p class="text-center">Ini adalah website resmi Paguyuban Sukho Nedho, komunitas yang bergerak di bidang sosial.</p>
+    <p class="text-center fw-bold fst-italic">Urip Sak Madyo Ning Migunani</p>
   </main>
+
+  <!-- Bootstrap JS (untuk menu responsif) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
