@@ -11,7 +11,7 @@
       font-family: 'Segoe UI', sans-serif;
     }
     .hero {
-      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('hero.jpg') center/cover no-repeat;
+      background: linear-gradient(135deg, #001f3f, #bfa76f);
       color: white;
       padding: 120px 0;
       text-align: center;
@@ -21,9 +21,12 @@
       box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     }
     footer {
-      background-color: #03063b;
+      background-color: #1a1a2e;
       color: white;
       padding: 20px 0;
+    }
+    .feature-card {
+      transition: 0.3s ease;
     }
   </style>
 </head>
@@ -62,8 +65,8 @@
   <!-- Feature Section -->
   <section class="py-5">
     <div class="container">
-      <div class="row text-center">
-        <div class="col-md-4 mb-4">
+      <div class="row g-4 text-center">
+        <div class="col-md-3">
           <div class="card h-100 feature-card">
             <div class="card-body">
               <h5 class="card-title">Tentang Kami</h5>
@@ -72,7 +75,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4 mb-4">
+        <div class="col-md-3">
           <div class="card h-100 feature-card">
             <div class="card-body">
               <h5 class="card-title">Visi & Misi</h5>
@@ -81,7 +84,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4 mb-4">
+        <div class="col-md-3">
           <div class="card h-100 feature-card">
             <div class="card-body">
               <h5 class="card-title">Galeri</h5>
@@ -90,16 +93,17 @@
             </div>
           </div>
         </div>
-        <div class="col">
-    <div class="card h-100 feature-card">
-      <div class="card-body">
-        <h5 class="card-title">Kontak</h5>
-        <p class="card-text">Hubungi kami untuk informasi, kolaborasi, atau pertanyaan lainnya.</p>
-        <a href="kontak.html" class="btn btn-outline-primary">Hubungi Kami</a>
+        <div class="col-md-3">
+          <div class="card h-100 feature-card">
+            <div class="card-body">
+              <h5 class="card-title">Kontak</h5>
+              <p class="card-text">Hubungi kami untuk informasi, kolaborasi, atau pertanyaan lainnya.</p>
+              <a href="kontak.html" class="btn btn-outline-primary">Hubungi Kami</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-</div>
-</div>
   </section>
 
   <!-- Footer -->
