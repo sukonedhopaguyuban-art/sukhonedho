@@ -1,41 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Kontak - Paguyuban Sukho Nedho</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kontak - Sukho Nedho</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #fff8e1;
+      margin: 0;
+      padding: 0;
+      background: #f2f5f3;
       color: #333;
+    }
+    header {
+      background: #020945;
+      color: white;
       padding: 20px;
+      text-align: center;
     }
-    a {
-      color: #000;
+    nav a {
+      color: white;
       text-decoration: none;
+      margin: 0 10px;
+      font-size: 18px;
     }
-    .kontak-item {
-      margin-bottom: 15px;
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    footer {
+      background: #020945;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+
+    @media screen and (max-width: 600px) {
+      header, main, footer {
+        padding: 15px;
+      }
+      nav a {
+        display: block;
+        margin: 10px 0;
+        font-size: 20px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Hubungi Kami</h1>
+  <header>
+    <h1>Sukho Nedho</h1>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="tentang.html">Tentang</a>
+      <a href="visi.html">Visi Misi</a>
+      <a href="galeri.html">Galeri</a>
+      <a href="kontak.html">Kontak</a>
+    </nav>
+  </header>
 
-  <div class="kontak-item">
-    📞 WhatsApp:  
-    <a href="https://wa.me/082241080501" target="_blank">+62 812-3456-7890</a>
-  </div>
+  <main>
+    <h2>Kontak Kami</h2>
+    <p>Jika Anda ingin bergabung atau bertanya, silakan hubungi kami:</p>
+    <ul>
+      <li>📧 Email: sukonedhopaguyuban@gmail.com</li>
+      <li>📱 WhatsApp: 082241080501</li>
+      <li>📸 Instagram: <a href="https://www.instagram.com/paguyuban_sukhonedho/" target="_blank">@sukhonedho</a></li>
+      <li>🎵 TikTok: <a href="https://www.tiktok.com/@paguyuban_sukhonedho" target="_blank">@sukhonedho</a></li>
+      <li>📍 Alamat: Jl. Dsn Kasihan, Ds Sidomakmur, Kec.Widodaren, Kab.Ngawi, Jawa Timur, Indonesia</li>
+    </ul>
+  </main>
 
-  <div class="kontak-item">
-    📧 Email:  
-    <a href="sukonedhopaguyuban@gmail.com">sukhonedho@example.com</a>
-  </div>
-
-  <div class="kontak-item">
-    📸 Instagram:  
-    <a href="https://www.instagram.com/paguyuban_sukhonedho/" target="_blank">@sukhonedho</a>
-  </div>
-
-  <a href="index.html">← Kembali ke Beranda</a>
+  <footer>
+    &copy; 2025 Sukho Nedho. All rights reserved.
+  </footer>
 </body>
 </html>
