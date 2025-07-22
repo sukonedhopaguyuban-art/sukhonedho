@@ -4,74 +4,63 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tentang Kami - Sukho Nedho</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f2f5f3;
-      color: #333;
+      background-color: #f2f5f3;
     }
-    header {
-      background: #020945;
-      color: white;
-      padding: 20px;
-      text-align: center;
+    .navbar {
+      background-color: #020945;
     }
-    main {
-      padding: 20px;
-      max-width: 800px;
-      margin: auto;
+    .navbar a {
+      color: #fff !important;
+      margin-right: 15px;
     }
-    footer {
-      background: #020945;
+    .footer {
+      background-color: #020945;
       color: white;
       text-align: center;
-      padding: 10px;
+      padding: 15px 0;
+      margin-top: 30px;
     }
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 10px;
-      font-size: 18px;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-    /* RESPONSIF UNTUK HP */
-    @media screen and (max-width: 600px) {
-      header, main, footer {
-        padding: 15px;
-      }
-      nav a {
-        display: block;
-        margin: 10px 0;
-        font-size: 20px;
-      }
+    h1, h2 {
+      color: #020945;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Sukho Nedho</h1>
-    <nav>
-      <a href="index.html">Beranda</a>
-      <a href="tentang.html">Tentang</a>
-      <a href="visi.html">Visi Misi</a>
-      <a href="galeri.html">Galeri</a>
-      <a href="kontak.html">Kontak</a>
-    </nav>
-  </header>
 
-  <main>
-    <h2>Tentang Kami</h2>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Sukho Nedho</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+          <li class="nav-item"><a class="nav-link active" href="tentang.html">Tentang</a></li>
+          <li class="nav-item"><a class="nav-link" href="visi.html">Visi Misi</a></li>
+          <li class="nav-item"><a class="nav-link" href="galeri.html">Galeri</a></li>
+          <li class="nav-item"><a class="nav-link" href="kontak.html">Kontak</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Konten Utama -->
+  <div class="container my-5">
+    <h2 class="mb-4">Tentang Kami</h2>
     <p>Paguyuban Sukho Nedho adalah komunitas sosial yang bergerak dalam bidang kemanusiaan, kebersamaan, dan gotong royong.</p>
     <p>Kami berdiri atas dasar kepedulian antar sesama dan membangun jaringan solidaritas antar anggota masyarakat dari berbagai latar belakang.</p>
-  </main>
+  </div>
 
-  <footer>
+  <!-- Footer -->
+  <div class="footer">
     &copy; 2025 Sukho Nedho. All rights reserved.
-  </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
