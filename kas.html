@@ -13,7 +13,7 @@
   <input id="email" class="form-control mb-2" placeholder="Email">
   <input id="password" type="password" class="form-control mb-2" placeholder="Password">
   <button class="btn btn-primary w-100" onclick="login()">Login</button>
-  <button class="btn btn-link w-100" onclick="reset()">Lupa Password</button>
+  <button class="btn btn-link w-100" onclick="resetPassword()">Lupa Password</button>
 </div>
 
 <div id="app" style="display:none;">
@@ -47,29 +47,26 @@
 <h5>Total: Rp <span id="total">0</span></h5>
 
 <table class="table">
-<thead><tr><th>Tgl</th><th>Nama</th><th>Jenis</th><th>Jumlah</th><th>Foto</th></tr></thead>
+<thead><tr><th>Tgl</th><th>Nama</th><th>Jenis</th><th>Jumlah</th><th>Foto</th><th>Aksi</th></tr></thead>
 <tbody id="tbl"></tbody>
 </table>
 </div>
 
 <script>
 const API = "https://script.google.com/macros/s/AKfycbyXrDZPQoQYsJxgoAggLmEnjCFuFhj92OCuH-XiBo3iOZDE8l9cxJJ2bE1f2d0GdZ-s/exec";
-let user = localStorage.getItem("user");
-if(user){ user=JSON.parse(user); showApp(user); }
+let user = null;
+let editingId = null; // untuk simpan id transaksi saat edit
 
 function login() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  const url = API + "?action=login&email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password);
-
-  fetch(url)
+  fetch(`${API}?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
     .then(r => r.json())
     .then(d => {
       if (d.status === "ok") {
         alert("LOGIN BERHASIL");
-        localStorage.setItem("user", JSON.stringify(d)); // simpan data user
-        showApp(d); // tampilkan menu berikutnya
+        showApp(d);
       } else {
         alert("LOGIN GAGAL");
       }
@@ -77,50 +74,123 @@ function login() {
 }
 
 function showApp(d){
-loginBox.style.display="none";
-app.style.display="block";
-nama.innerText=d.nama; role.innerText=d.role;
-if(d.role!=="Admin") formKas.style.display="none";
-user=d;
+  document.getElementById("loginBox").style.display="none";
+  document.getElementById("app").style.display="block";
+  document.getElementById("nama").innerText=d.nama;
+  document.getElementById("role").innerText=d.role;
+  if(d.role !== "Admin") document.getElementById("formKas").style.display="none";
+  user = d;
+  load();
 }
 
-function reset(){
-fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},
-body:JSON.stringify({action:"reset",email:email.value})})
-.then(()=>alert("Password dikirim ke email"));
+function resetPassword(){
+  const email = document.getElementById("email").value;
+  if(!email){ alert("Isi email dulu"); return; }
+
+  fetch(API,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({action:"reset", email})
+  }).then(()=>alert("Password dikirim ke email"));
 }
 
 function simpan(){
-const f=foto.files[0];
-const r=new FileReader();
-r.onload=()=>fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-action:"simpanKas",
-tanggal:tanggal.value,
-nama:namaTransaksi.value,
-jenis:jenis.value,
-jumlah:jumlah.value,
-keterangan:keterangan.value,
-email:user.email,
-foto:r.result.split(",")[1],
-fotoType:f.type
-})}).then(()=>alert("Tersimpan"));
-if(f) r.readAsDataURL(f); else r.onload();
+  if(!user){ alert("Login dulu"); return; }
+
+  const f = document.getElementById("foto").files[0];
+  const r = new FileReader();
+  r.onload = () => {
+    let body = {
+      action: editingId ? "updateKas" : "simpanKas",
+      tanggal: document.getElementById("tanggal").value,
+      nama: document.getElementById("namaTransaksi").value,
+      jenis: document.getElementById("jenis").value,
+      jumlah: document.getElementById("jumlah").value,
+      keterangan: document.getElementById("keterangan").value,
+      email: user.email,
+      foto: f ? r.result.split(",")[1] : "",
+      fotoType: f ? f.type : ""
+    };
+    if(editingId) body.id = editingId;
+
+    fetch(API,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(body)
+    }).then(()=>{
+      alert(editingId ? "Terupdate" : "Tersimpan");
+      editingId = null;
+      resetForm();
+      load();
+    });
+  };
+  if(f) r.readAsDataURL(f); else r.onload();
 }
 
 function load(){
-fetch(`${API}?action=getKas&bulan=${bulan.value}&tahun=${tahun.value}`)
-.then(r=>r.json()).then(d=>{
-let t=0,h="";
-d.forEach(x=>{
-const j=Number(x[3]); x[2]=="Masuk"?t+=j:t-=j;
-h+=`<tr><td>${x[0]}</td><td>${x[1]}</td><td>${x[2]}</td><td>${j}</td><td>${x[5]?`<a href="${x[5]}" target="_blank">Foto</a>`:""}</td></tr>`;
-});
-tbl.innerHTML=h; total.innerText=t;
-});
+  const bulan = document.getElementById("bulan").value;
+  const tahun = document.getElementById("tahun").value;
+
+  fetch(`${API}?action=getKas&bulan=${bulan}&tahun=${tahun}`)
+    .then(r => r.json())
+    .then(d => {
+      let t = 0, h = "";
+      d.forEach((x,i) => {
+        const j = Number(x[3]);
+        x[2]=="Masuk"?t+=j:t-=j;
+        let aksi = "";
+        if(user && user.role==="Admin"){
+          aksi = `<button class="btn btn-sm btn-warning" onclick="edit(${i})">Edit</button>
+                  <button class="btn btn-sm btn-danger" onclick="hapus(${i})">Hapus</button>`;
+        }
+        h += `<tr>
+          <td>${x[0]}</td>
+          <td>${x[1]}</td>
+          <td>${x[2]}</td>
+          <td>${j}</td>
+          <td>${x[5]?`<a href="${x[5]}" target="_blank">Foto</a>`:""}</td>
+          <td>${aksi}</td>
+        </tr>`;
+      });
+      document.getElementById("tbl").innerHTML = h;
+      document.getElementById("total").innerText = t;
+      window.kasData = d; // simpan data sementara
+    });
 }
 
-function logout(){localStorage.clear();location.reload();}
+function edit(index){
+  const x = window.kasData[index];
+  editingId = index; // bisa juga simpan ID sebenarnya jika ada
+  document.getElementById("tanggal").value = x[0];
+  document.getElementById("namaTransaksi").value = x[1];
+  document.getElementById("jenis").value = x[2];
+  document.getElementById("jumlah").value = x[3];
+  document.getElementById("keterangan").value = x[4];
+}
+
+function hapus(index){
+  const x = window.kasData[index];
+  if(!confirm("Hapus transaksi ini?")) return;
+  fetch(API,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({action:"hapusKas", id:index})
+  }).then(()=>{alert("Terhapus"); load();});
+}
+
+function resetForm(){
+  document.getElementById("tanggal").value="";
+  document.getElementById("namaTransaksi").value="";
+  document.getElementById("jenis").value="Masuk";
+  document.getElementById("jumlah").value="";
+  document.getElementById("keterangan").value="";
+  document.getElementById("foto").value="";
+}
+
+function logout(){
+  user = null;
+  location.reload();
+}
 </script>
 </body>
 </html>
