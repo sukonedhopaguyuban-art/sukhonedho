@@ -19,7 +19,7 @@ td, th { border:1px solid #ccc; padding:6px }
 <div id="loginBox">
   <input id="email" placeholder="Email"><br>
   <input id="password" type="password" placeholder="Password"><br>
-  <button type="button" id="btnLogin">Login</button>
+  <button onclick="login()">Login</button>
   <p id="msg" style="color:red"></p>
 </div>
 
@@ -28,7 +28,7 @@ td, th { border:1px solid #ccc; padding:6px }
 
   <p>
     Login sebagai: <b><span id="roleText"></span></b>
-    <button type="button" id="btnLogout">Logout</button>
+    <button onclick="logout()">Logout</button>
   </p>
 
   <!-- INPUT KAS (ADMIN SAJA) -->
@@ -43,7 +43,8 @@ td, th { border:1px solid #ccc; padding:6px }
     <input type="number" id="jumlah" placeholder="Jumlah"><br>
     <input placeholder="Keterangan" id="ket"><br>
     <input type="file" id="foto"><br>
-    <button type="button" id="btnSimpan">Simpan</button>
+    <!-- Tambahkan type="button" supaya tombol bisa diklik -->
+    <button type="button" onclick="simpan()">Simpan</button>
   </div>
 
   <h3>Total Saldo: Rp <span id="total">0</span></h3>
@@ -64,8 +65,7 @@ td, th { border:1px solid #ccc; padding:6px }
 </div>
 
 <script>
-// Ganti dengan Web App URL kamu
-const API = "https://script.google.com/macros/s/AKfycbxDwTaFuOb9-huxzc5U95i3-6lwxOOMG8_5eS0e0OwxKBerXKJO8iHSvvt-1TCvHLn1/exec";
+const API = "https://script.google.com/macros/s/AKfycbxMO-B4IlCBI3Lk5rxhGQ9DTxsTeWBUIx3DlYG4lH-Ifo_VCYEH9pYsX9_NguB3iyrU/exec";
 
 // ELEMENT
 const loginBox = document.getElementById("loginBox");
@@ -79,40 +79,34 @@ const totalEl = document.getElementById("total");
 let ROLE = "";
 
 // LOGIN
-document.getElementById("btnLogin").addEventListener("click", function(){
+function login() {
   fetch(API, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       action: "login",
-      email: document.getElementById("email").value,
-      password: document.getElementById("password").value
+      email: email.value,
+      password: password.value
     })
   })
   .then(r => r.json())
   .then(d => {
-    if(d.status === "ok"){
+    if (d.status === "ok") {
       ROLE = d.role;
       roleText.innerText = ROLE;
       loginBox.classList.add("hidden");
       app.classList.remove("hidden");
-      if(ROLE !== "admin") formKas.style.display = "none";
+      if (ROLE !== "admin") formKas.style.display = "none";
       loadKas();
     } else {
       msg.innerText = "LOGIN GAGAL";
     }
-  })
-  .catch(err => console.error(err));
-});
-
-// LOGOUT
-document.getElementById("btnLogout").addEventListener("click", function(){
-  location.reload();
-});
+  });
+}
 
 // SIMPAN KAS
-document.getElementById("btnSimpan").addEventListener("click", function(){
-  const f = document.getElementById("foto").files[0];
+function simpan() {
+  console.log("Tombol simpan diklik!"); // debug
+  const f = foto.files[0];
   const r = new FileReader();
 
   const kirim = (fotoBase64, fotoType) => {
@@ -121,27 +115,27 @@ document.getElementById("btnSimpan").addEventListener("click", function(){
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         action:"addKas",
-        tanggal: document.getElementById("tanggal").value,
-        nama: document.getElementById("nama").value,
-        jenis: document.getElementById("jenis").value,
-        jumlah: document.getElementById("jumlah").value,
-        keterangan: document.getElementById("ket").value,
+        tanggal:tanggal.value,
+        nama:nama.value,
+        jenis:jenis.value,
+        jumlah:jumlah.value,
+        keterangan:ket.value,
         foto: fotoBase64,
         fotoType: fotoType
       })
     })
     .then(r => r.json())
     .then(d => {
-      if(d.status === "ok"){
+      if(d.status === "ok") {
         alert("Data berhasil disimpan!");
+        loadKas();  // refresh tabel
         // reset form
-        document.getElementById("tanggal").value="";
-        document.getElementById("nama").value="";
-        document.getElementById("jenis").value="Masuk";
-        document.getElementById("jumlah").value="";
-        document.getElementById("ket").value="";
-        document.getElementById("foto").value="";
-        loadKas();
+        tanggal.value="";
+        nama.value="";
+        jenis.value="Masuk";
+        jumlah.value="";
+        ket.value="";
+        foto.value="";
       } else {
         alert("Gagal menyimpan data!");
       }
@@ -155,19 +149,18 @@ document.getElementById("btnSimpan").addEventListener("click", function(){
   } else {
     kirim("", "");
   }
-});
+}
 
 // LOAD DATA
-function loadKas(){
+function loadKas() {
   fetch(API, {
     method:"POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action:"getKas" })
+    body:JSON.stringify({ action:"getKas" })
   })
   .then(r=>r.json())
   .then(d=>{
     tabel.innerHTML="";
-    let total=0;
+    let total = 0;
     d.forEach(r=>{
       total += (r[2]==="Masuk"? r[3] : -r[3]);
       tabel.innerHTML += `
@@ -181,8 +174,11 @@ function loadKas(){
         </tr>`;
     });
     totalEl.innerText = total;
-  })
-  .catch(err => console.error(err));
+  });
+}
+
+function logout(){
+  location.reload();
 }
 </script>
 
