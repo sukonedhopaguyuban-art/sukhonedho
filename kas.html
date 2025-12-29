@@ -1,24 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Login Kas</title>
+<meta charset="UTF-8">
+<title>Kas Sukho Nedho</title>
 </head>
 <body>
 
 <h2>Login Kas</h2>
 
-<input type="email" placeholder="Email"><br><br>
-<input type="password" placeholder="Password"><br><br>
+<div id="loginBox">
+  <input id="email" type="email" placeholder="Email"><br><br>
+  <input id="password" type="password" placeholder="Password"><br><br>
+  <button onclick="login()">Login</button>
+  <p id="loginMsg"></p>
+</div>
 
-<button onclick="login()">Login</button>
+<div id="kasBox" style="display:none">
+  <h3>Input Kas</h3>
+
+  <input id="tanggal" type="date"><br><br>
+  <select id="jenis">
+    <option value="Masuk">Masuk</option>
+    <option value="Keluar">Keluar</option>
+  </select><br><br>
+
+  <input id="jumlah" type="number" placeholder="Jumlah"><br><br>
+  <input id="ket" placeholder="Keterangan"><br><br>
+
+  <input id="foto" type="file" accept="image/*"><br><br>
+
+  <button onclick="simpanKas()">Simpan</button>
+  <p id="kasMsg"></p>
+</div>
 
 <script>
+const API = "https://script.google.com/macros/s/AKfycbxPXbFfAzfIhJNehfzjn9uqP8v92r6Ag4dq0QNDgLxw6zcPV98cehuObJf1litZF4gx/exec";
+let loginNama = "";
+
 function login() {
-  alert("TOMBOL LOGIN BISA DIKLIK");
+  fetch(API, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      action: "login",
+      email: email.value,
+      password: password.value
+    })
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (d.status === "ok") {
+      loginNama = d.nama;
+      loginBox.style.display = "none";
+      kasBox.style.display = "block";
+    } else {
+      loginMsg.innerText = "Login gagal";
+    }
+  })
+  .catch(() => loginMsg.innerText = "Koneksi error");
+}
+
+function simpanKas() {
+  const file = foto.files[0];
+  if (!file) {
+    kasMsg.innerText = "Foto bukti wajib";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function () {
+    const base64 = reader.result.split(",")[1];
+
+    fetch(API, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        action: "simpanKas",
+        tanggal: tanggal.value,
+        nama: loginNama,
+        jenis: jenis.value,
+        jumlah: jumlah.value,
+        keterangan: ket.value,
+        fotoBase64: base64,
+        fotoType: file.type
+      })
+    })
+    .then(r => r.json())
+    .then(() => {
+      kasMsg.innerText = "Data tersimpan";
+      foto.value = "";
+    })
+    .catch(() => kasMsg.innerText = "Gagal simpan");
+  };
+
+  reader.readAsDataURL(file);
 }
 </script>
 
 </body>
 </html>
-
