@@ -5,42 +5,79 @@
 <title>Kas Sukho Nedho</title>
 <style>
 body { font-family: Arial; padding:20px }
-input, button { padding:6px; margin:4px }
-table { border-collapse: collapse; width:100% }
+input, select, button { padding:6px; margin:4px }
+table { border-collapse: collapse; width:100%; margin-top:10px }
 td, th { border:1px solid #ccc; padding:6px }
+.hidden { display:none }
 </style>
 </head>
 <body>
 
-<h2>Login Kas</h2>
+<h2>Kas Sukho Nedho</h2>
 
-<div id="login">
+<!-- LOGIN -->
+<div id="loginBox">
   <input id="email" placeholder="Email"><br>
   <input id="password" type="password" placeholder="Password"><br>
   <button onclick="login()">Login</button>
   <p id="msg" style="color:red"></p>
 </div>
 
-<div id="kas" style="display:none">
-  <h3>Input Kas</h3>
-  <input type="date" id="tanggal"><br>
-  <input placeholder="Nama Transaksi" id="nama"><br>
-  <select id="jenis">
-    <option>Masuk</option>
-    <option>Keluar</option>
-  </select><br>
-  <input type="number" id="jumlah"><br>
-  <input placeholder="Keterangan" id="ket"><br>
-  <input type="file" id="foto"><br>
-  <button onclick="simpan()">Simpan</button>
+<!-- APP -->
+<div id="app" class="hidden">
 
-  <h3>Data Kas</h3>
-  <table id="tabel"></table>
+  <p>
+    Login sebagai: <b><span id="roleText"></span></b>
+    <button onclick="logout()">Logout</button>
+  </p>
+
+  <!-- INPUT KAS (ADMIN SAJA) -->
+  <div id="formKas">
+    <h3>Input Kas</h3>
+    <input type="date" id="tanggal"><br>
+    <input placeholder="Nama Transaksi" id="nama"><br>
+    <select id="jenis">
+      <option>Masuk</option>
+      <option>Keluar</option>
+    </select><br>
+    <input type="number" id="jumlah" placeholder="Jumlah"><br>
+    <input placeholder="Keterangan" id="ket"><br>
+    <input type="file" id="foto"><br>
+    <button onclick="simpan()">Simpan</button>
+  </div>
+
+  <h3>Total Saldo: Rp <span id="total">0</span></h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Tanggal</th>
+        <th>Nama</th>
+        <th>Jenis</th>
+        <th>Jumlah</th>
+        <th>Keterangan</th>
+        <th>Foto</th>
+      </tr>
+    </thead>
+    <tbody id="tabel"></tbody>
+  </table>
 </div>
 
 <script>
 const API = "https://script.google.com/macros/s/AKfycbw3kTSQjD-RQd9v1P13m_SaAJ5fMdEZ_-WOGxrgh04WzrewmhRU1KhHYdqpc9bTnqgj/exec";
 
+// ELEMENT
+const loginBox = document.getElementById("loginBox");
+const app = document.getElementById("app");
+const formKas = document.getElementById("formKas");
+const msg = document.getElementById("msg");
+const roleText = document.getElementById("roleText");
+const tabel = document.getElementById("tabel");
+const totalEl = document.getElementById("total");
+
+let ROLE = "";
+
+// LOGIN
 function login() {
   fetch(API, {
     method: "POST",
@@ -50,23 +87,27 @@ function login() {
       password: password.value
     })
   })
-  .then(r=>r.json())
-  .then(d=>{
-    if(d.status==="ok"){
-      login.style.display="none";
-      kas.style.display="block";
+  .then(r => r.json())
+  .then(d => {
+    if (d.status === "ok") {
+      ROLE = d.role;
+      roleText.innerText = ROLE;
+      loginBox.classList.add("hidden");
+      app.classList.remove("hidden");
+      if (ROLE !== "admin") formKas.style.display = "none";
       loadKas();
     } else {
-      msg.innerText="LOGIN GAGAL";
+      msg.innerText = "LOGIN GAGAL";
     }
   });
 }
 
+// SIMPAN KAS
 function simpan() {
   const f = foto.files[0];
   const r = new FileReader();
 
-  r.onload = () => {
+  const kirim = (fotoBase64, fotoType) => {
     fetch(API, {
       method:"POST",
       body:JSON.stringify({
@@ -76,31 +117,48 @@ function simpan() {
         jenis:jenis.value,
         jumlah:jumlah.value,
         keterangan:ket.value,
-        foto:r.result.split(",")[1],
-        fotoType:f.type
+        foto: fotoBase64,
+        fotoType: fotoType
       })
     }).then(()=>loadKas());
   };
 
-  if(f) r.readAsDataURL(f);
+  if (f) {
+    r.onload = () => kirim(r.result.split(",")[1], f.type);
+    r.readAsDataURL(f);
+  } else {
+    kirim("", "");
+  }
 }
 
+// LOAD DATA
 function loadKas() {
-  fetch(API,{
+  fetch(API, {
     method:"POST",
-    body:JSON.stringify({action:"getKas"})
+    body:JSON.stringify({ action:"getKas" })
   })
   .then(r=>r.json())
   .then(d=>{
-    tabel.innerHTML="<tr><th>Tgl</th><th>Nama</th><th>Jenis</th><th>Jumlah</th><th>Ket</th><th>Foto</th></tr>";
+    tabel.innerHTML="";
+    let total = 0;
     d.forEach(r=>{
-      tabel.innerHTML+=`<tr>
-        <td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td>
-        <td>${r[3]}</td><td>${r[4]}</td>
-        <td>${r[5]?`<a href="${r[5]}" target="_blank">Foto</a>`:""}</td>
-      </tr>`;
+      total += (r[2]==="Masuk"? r[3] : -r[3]);
+      tabel.innerHTML += `
+        <tr>
+          <td>${r[0]}</td>
+          <td>${r[1]}</td>
+          <td>${r[2]}</td>
+          <td>${r[3]}</td>
+          <td>${r[4]}</td>
+          <td>${r[5]?`<a href="${r[5]}" target="_blank">Foto</a>`:""}</td>
+        </tr>`;
     });
+    totalEl.innerText = total;
   });
+}
+
+function logout(){
+  location.reload();
 }
 </script>
 
