@@ -61,17 +61,15 @@ function login() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  const url =
-    "https://script.google.com/macros/s/AKfycbyXrDZPQoQYsJxgoAggLmEnjCFuFhj92OCuH-XiBo3iOZDE8l9cxJJ2bE1f2d0GdZ-s/exec"
-    + "?action=login"
-    + "&email=" + encodeURIComponent(email)
-    + "&password=" + encodeURIComponent(password);
+  const url = API + "?action=login&email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password);
 
   fetch(url)
     .then(r => r.json())
     .then(d => {
       if (d.status === "ok") {
         alert("LOGIN BERHASIL");
+        localStorage.setItem("user", JSON.stringify(d)); // simpan data user
+        showApp(d); // tampilkan menu berikutnya
       } else {
         alert("LOGIN GAGAL");
       }
