@@ -34,32 +34,19 @@
 </div>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbxPXbFfAzfIhJNehfzjn9uqP8v92r6Ag4dq0QNDgLxw6zcPV98cehuObJf1litZF4gx/exec";
-let loginNama = "";
+const API_URL = "https://script.google.com/macros/s/AKfycbxPXbFfAzfIhJNehfzjn9uqP8v92r6Ag4dq0QNDgLxw6zcPV98cehuObJf1litZF4gx/exec";
 
 function login() {
-  fetch(API, {
+  fetch(API_URL, {
     method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      action: "login",
-      email: email.value,
-      password: password.value
-    })
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ test: "ping" })
   })
-  .then(r => r.json())
-  .then(d => {
-    if (d.status === "ok") {
-      loginNama = d.nama;
-      loginBox.style.display = "none";
-      kasBox.style.display = "block";
-    } else {
-      loginMsg.innerText = "Login gagal";
-    }
-  })
-  .catch(() => loginMsg.innerText = "Koneksi error");
+  .then(res => res.text())
+  .then(data => alert("RESPON API: " + data))
+  .catch(err => alert("ERROR FETCH"));
 }
-
+  
 function simpanKas() {
   const file = foto.files[0];
   if (!file) {
@@ -95,7 +82,5 @@ function simpanKas() {
 
   reader.readAsDataURL(file);
 }
-</script>
-
 </body>
 </html>
