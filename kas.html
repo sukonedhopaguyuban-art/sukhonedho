@@ -57,13 +57,25 @@ const API = "https://script.google.com/macros/s/AKfycbyXrDZPQoQYsJxgoAggLmEnjCFu
 let user = localStorage.getItem("user");
 if(user){ user=JSON.parse(user); showApp(user); }
 
-function login(){
-fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},
-body:JSON.stringify({action:"login",email:email.value,password:password.value})})
-.then(r=>r.json()).then(d=>{
-if(d.status==="ok"){localStorage.setItem("user",JSON.stringify({...d,email:email.value}));showApp({...d,email:email.value});}
-else alert("Login gagal");
-});
+function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const url =
+    "https://script.google.com/macros/s/AKfycbyXrDZPQoQYsJxgoAggLmEnjCFuFhj92OCuH-XiBo3iOZDE8l9cxJJ2bE1f2d0GdZ-s/exec"
+    + "?action=login"
+    + "&email=" + encodeURIComponent(email)
+    + "&password=" + encodeURIComponent(password);
+
+  fetch(url)
+    .then(r => r.json())
+    .then(d => {
+      if (d.status === "ok") {
+        alert("LOGIN BERHASIL");
+      } else {
+        alert("LOGIN GAGAL");
+      }
+    });
 }
 
 function showApp(d){
