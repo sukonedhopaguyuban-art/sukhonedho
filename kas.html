@@ -2,85 +2,108 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Kas Sukho Nedho</title>
+<title>Kas</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="container py-4">
 
-<h2>Login Kas</h2>
+<h3>Kas</h3>
 
 <div id="loginBox">
-  <input id="email" type="email" placeholder="Email"><br><br>
-  <input id="password" type="password" placeholder="Password"><br><br>
-  <button onclick="login()">Login</button>
-  <p id="loginMsg"></p>
+  <input id="email" class="form-control mb-2" placeholder="Email">
+  <input id="password" type="password" class="form-control mb-2" placeholder="Password">
+  <button class="btn btn-primary w-100" onclick="login()">Login</button>
 </div>
 
-<div id="kasBox" style="display:none">
-  <h3>Input Kas</h3>
+<div id="app" style="display:none;">
+  <p>Role: <b id="role"></b></p>
 
-  <input id="tanggal" type="date"><br><br>
-  <select id="jenis">
-    <option value="Masuk">Masuk</option>
-    <option value="Keluar">Keluar</option>
-  </select><br><br>
+  <div id="formKas">
+    <input id="tanggal" type="date" class="form-control mb-2">
+    <input id="nama" class="form-control mb-2" placeholder="Nama Transaksi">
+    <select id="jenis" class="form-control mb-2">
+      <option>Masuk</option>
+      <option>Keluar</option>
+    </select>
+    <input id="jumlah" type="number" class="form-control mb-2" placeholder="Jumlah">
+    <input id="ket" class="form-control mb-2" placeholder="Keterangan">
+    <button class="btn btn-success" onclick="simpan()">Simpan</button>
+  </div>
 
-  <input id="jumlah" type="number" placeholder="Jumlah"><br><br>
-  <input id="ket" placeholder="Keterangan"><br><br>
+  <hr>
+  <h5>Total Saldo: Rp <span id="total">0</span></h5>
 
-  <input id="foto" type="file" accept="image/*"><br><br>
-
-  <button onclick="simpanKas()">Simpan</button>
-  <p id="kasMsg"></p>
+  <table class="table">
+    <thead>
+      <tr><th>Tanggal</th><th>Nama</th><th>Jenis</th><th>Jumlah</th><th>Ket</th></tr>
+    </thead>
+    <tbody id="tbl"></tbody>
+  </table>
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxPXbFfAzfIhJNehfzjn9uqP8v92r6Ag4dq0QNDgLxw6zcPV98cehuObJf1litZF4gx/exec";
+const API = "https://script.google.com/macros/s/AKfycbxMeHnXU2lhQ266OX3VeDXxVb1flg4xD2hCEHAfgR6msCQuxcZZ4tO-bWMm85a11hY5/exec";
+let roleUser = "";
 
 function login() {
-  fetch(API_URL, {
+  fetch(API, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ test: "ping" })
+    body: JSON.stringify({
+      action: "login",
+      email: email.value,
+      password: password.value
+    })
   })
-  .then(res => res.text())
-  .then(data => alert("RESPON API: " + data))
-  .catch(err => alert("ERROR FETCH"));
+  .then(r => r.json())
+  .then(d => {
+    if (d.status === "ok") {
+      roleUser = d.role;
+      loginBox.style.display="none";
+      app.style.display="block";
+      role.innerText = d.role;
+      load();
+      if (d.role !== "admin") formKas.style.display="none";
+    } else alert("Login gagal");
+  });
 }
-  
-function simpanKas() {
-  const file = foto.files[0];
-  if (!file) {
-    kasMsg.innerText = "Foto bukti wajib";
-    return;
-  }
 
-  const reader = new FileReader();
-  reader.onload = function () {
-    const base64 = reader.result.split(",")[1];
-
-    fetch(API, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({
-        action: "simpanKas",
-        tanggal: tanggal.value,
-        nama: loginNama,
-        jenis: jenis.value,
-        jumlah: jumlah.value,
-        keterangan: ket.value,
-        fotoBase64: base64,
-        fotoType: file.type
-      })
+function simpan() {
+  fetch(API, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "addKas",
+      tanggal: tanggal.value,
+      nama: nama.value,
+      jenis: jenis.value,
+      jumlah: jumlah.value,
+      keterangan: ket.value
     })
-    .then(r => r.json())
-    .then(() => {
-      kasMsg.innerText = "Data tersimpan";
-      foto.value = "";
-    })
-    .catch(() => kasMsg.innerText = "Gagal simpan");
-  };
-
-  reader.readAsDataURL(file);
+  }).then(() => load());
 }
+
+function load() {
+  fetch(API, {
+    method: "POST",
+    body: JSON.stringify({ action: "getKas" })
+  })
+  .then(r=>r.json())
+  .then(rows=>{
+    let t = 0, h="";
+    rows.forEach(r=>{
+      let j = Number(r[3]);
+      r[2] === "Masuk" ? t+=j : t-=j;
+      h += `<tr>
+        <td>${r[0]}</td>
+        <td>${r[1]}</td>
+        <td>${r[2]}</td>
+        <td>${j}</td>
+        <td>${r[4]}</td>
+      </tr>`;
+    });
+    tbl.innerHTML = h;
+    total.innerText = t;
+  });
+}
+</script>
 </body>
 </html>
