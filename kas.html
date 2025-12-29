@@ -1,48 +1,18 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
   <meta charset="UTF-8">
   <title>Kas Sukho Nedho</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-
 <body>
-  <h2>Login Kas</h2>
 
-  <input type="email" id="email" placeholder="Email"><br><br>
-  <input type="password" id="password" placeholder="Password"><br><br>
+<h3>TES TOMBOL</h3>
 
-  <button onclick="login()">Login</button>
-
-  <p id="info"></p>
+<button onclick="testKlik()">KLIK SAYA</button>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxojhKRNbwBm4jzBjhuqCn52ZSMsuCMFkRIJ8mc2QTXgLMJtAn_tV0mPX47e66macE/exec";
-
-function login() {
-  document.getElementById("info").innerText = "Proses login...";
-
-  fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      action: "login",
-      email: document.getElementById("email").value,
-      password: document.getElementById("password").value
-    })
-  })
-  .then(r => r.json())
-  .then(d => {
-    if (d.status === "ok") {
-      localStorage.setItem("kas_user", JSON.stringify(d));
-      window.location.href = "kas_dashboard.html";
-    } else {
-      document.getElementById("info").innerText = "Login gagal";
-    }
-  })
-  .catch(err => {
-    document.getElementById("info").innerText = "Error koneksi";
-  });
+function testKlik() {
+  alert("TOMBOL BISA DIKLIK");
 }
 </script>
 
