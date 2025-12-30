@@ -1,129 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base target="_top">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<title>Kas Sukho Nedho</title>
+<link href="kas.css" rel="stylesheet">
 </head>
-<body class="p-4">
-
+<body>
 <div id="loginDiv">
   <h3>Login Kas</h3>
   <input id="email" placeholder="Email" class="form-control mb-2">
   <input id="password" type="password" placeholder="Password" class="form-control mb-2">
   <button class="btn btn-primary" onclick="login()">Login</button>
-  <div id="loginMsg" class="text-danger mt-2"></div>
 </div>
 
-<div id="kasDiv" style="display:none;">
+<div id="mainDiv" style="display:none;">
   <button class="btn btn-secondary mb-2" onclick="logout()">Logout</button>
   <h3>Data Kas</h3>
-  <label>Filter Bulan: <input type="number" id="monthFilter" min="1" max="12" onchange="loadKas()"></label>
-
-  <table class="table table-bordered mt-2">
+  <label>Bulan: <input type="number" id="bulan" min="1" max="12" onchange="loadKas()"></label>
+  <table id="tabel" class="table table-bordered">
     <thead>
       <tr>
-        <th>No</th><th>Tanggal</th><th>Nama Transaksi</th><th>Jenis</th><th>Keterangan</th><th>Foto</th>
-        <th id="adminActions" style="display:none;">Aksi</th>
+        <th>No</th><th>Tanggal</th><th>Nama</th><th>Jenis</th><th>Keterangan</th><th>Foto</th><th>Aksi</th>
       </tr>
     </thead>
-    <tbody id="kasBody"></tbody>
+    <tbody></tbody>
   </table>
 
-  <div id="addForm" style="display:none;">
+  <div id="adminForm">
     <h4>Tambah Kas</h4>
-    <input type="date" id="addTanggal" class="form-control mb-1">
-    <input type="text" id="addNama" placeholder="Nama Transaksi" class="form-control mb-1">
-    <select id="addJenis" class="form-control mb-1">
+    <input type="date" id="tgl" class="form-control mb-1">
+    <input type="text" id="nama" placeholder="Nama Transaksi" class="form-control mb-1">
+    <select id="jenis" class="form-control mb-1">
       <option value="Masuk">Masuk</option>
       <option value="Keluar">Keluar</option>
     </select>
-    <input type="text" id="addKeterangan" placeholder="Keterangan" class="form-control mb-1">
-    <input type="file" id="addFoto" class="form-control mb-1">
+    <input type="text" id="ket" placeholder="Keterangan" class="form-control mb-1">
+    <input type="file" id="foto" class="form-control mb-1">
     <button class="btn btn-success" onclick="addKas()">Tambah</button>
   </div>
 </div>
 
-<script>
-var role='';
-function login(){
-  var email = document.getElementById('email').value;
-  var password = document.getElementById('password').value;
-  google.script.run.withSuccessHandler(function(res){
-    if(res.status){
-      role = res.role;
-      document.getElementById('loginDiv').style.display='none';
-      document.getElementById('kasDiv').style.display='block';
-      if(role=='Admin'){
-        document.getElementById('adminActions').style.display='table-cell';
-        document.getElementById('addForm').style.display='block';
-      }
-      loadKas();
-    } else {
-      document.getElementById('loginMsg').innerText='Email atau password salah';
-    }
-  }).login(email,password);
-}
-
-function loadKas(){
-  var month = document.getElementById('monthFilter').value;
-  if(month=='') month=null;
-  google.script.run.withSuccessHandler(function(data){
-    var tbody = document.getElementById('kasBody');
-    tbody.innerHTML='';
-    for(var i=0;i<data.length;i++){
-      var row = `<tr>
-        <td>${i+1}</td>
-        <td>${data[i].tanggal}</td>
-        <td>${data[i].nama}</td>
-        <td>${data[i].jenis}</td>
-        <td>${data[i].keterangan}</td>
-        <td><a href="${data[i].foto}" target="_blank">Lihat</a></td>`;
-      if(role=='Admin'){
-        row+=`<td>
-          <button class="btn btn-sm btn-warning" onclick="edit(${data[i].row})">Edit</button>
-          <button class="btn btn-sm btn-danger" onclick="hapus(${data[i].row})">Hapus</button>
-        </td>`;
-      }
-      row+='</tr>';
-      tbody.innerHTML+=row;
-    }
-  }).getKas(month);
-}
-
-function logout(){
-  role='';
-  document.getElementById('kasDiv').style.display='none';
-  document.getElementById('loginDiv').style.display='block';
-}
-
-function addKas(){
-  var tanggal=document.getElementById('addTanggal').value;
-  var nama=document.getElementById('addNama').value;
-  var jenis=document.getElementById('addJenis').value;
-  var keterangan=document.getElementById('addKeterangan').value;
-  var foto=document.getElementById('addFoto').files[0];
-  var reader=new FileReader();
-  reader.onload=function(e){
-    var blob=Utilities.newBlob(new Uint8Array(e.target.result),foto.type,foto.name);
-    google.script.run.withSuccessHandler(loadKas).addKas(tanggal,nama,jenis,keterangan,blob,foto.name);
-  }
-  reader.readAsArrayBuffer(foto);
-}
-
-function edit(row){
-  var t=prompt("Tanggal?");
-  var n=prompt("Nama Transaksi?");
-  var j=prompt("Jenis? (Masuk/Keluar)");
-  var k=prompt("Keterangan?");
-  google.script.run.withSuccessHandler(loadKas).editKas(row,t,n,j,k);
-}
-
-function hapus(row){
-  if(confirm('Hapus data ini?')){
-    google.script.run.withSuccessHandler(loadKas).deleteKas(row);
-  }
-}
-</script>
-
+<script src="kas.js"></script>
 </body>
 </html>
