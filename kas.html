@@ -1,61 +1,144 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Menu Kas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kas - Sukho Nedho</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <style>
-  table, th, td { border:1px solid #ccc; border-collapse:collapse; padding:5px; }
-  img { max-width:100px; cursor:pointer; }
+  body {
+    background-color: #f2f5f3;
+  }
+  .navbar-custom {
+    background-color: #020945;
+  }
+  footer {
+    background-color: #020945;
+    color: white;
+  }
+  table th {
+    background-color: #020945;
+    color: white;
+    text-align: center;
+  }
+  table td {
+    vertical-align: middle;
+  }
+  img {
+    max-width: 80px;
+    cursor: pointer;
+  }
 </style>
 </head>
+
 <body>
 
-<h2>Data Kas</h2>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-custom navbar-dark">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="index.html">Sukho Nedho</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+        <li class="nav-item"><a class="nav-link" href="tentang.html">Tentang</a></li>
+        <li class="nav-item"><a class="nav-link" href="visi.html">Visi Misi</a></li>
+        <li class="nav-item"><a class="nav-link" href="galeri.html">Galeri</a></li>
+        <li class="nav-item"><a class="nav-link" href="kontak.html">Kontak</a></li>
+        <li class="nav-item"><a class="nav-link active" href="kas.html">Kas</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
-<label>Kode:</label>
-<input type="text" id="kode"><br><br>
+<!-- KONTEN -->
+<main class="container py-5">
 
-<label>Bulan:</label>
-<select id="bulan">
-  <option value="1">Januari</option>
-  <option value="2">Februari</option>
-  <option value="3">Maret</option>
-  <option value="4">April</option>
-  <option value="5">Mei</option>
-  <option value="6">Juni</option>
-  <option value="7">Juli</option>
-  <option value="8">Agustus</option>
-  <option value="9">September</option>
-  <option value="10">Oktober</option>
-  <option value="11">November</option>
-  <option value="12">Desember</option>
-</select>
-<button onclick="tampilKas()">Tampilkan</button>
+  <div class="text-center mb-4">
+    <h2 class="fw-semibold">Data Kas Paguyuban</h2>
+    <p class="text-muted">Rekap kas masuk dan keluar</p>
+  </div>
 
-<table id="tabel">
-<thead>
-<tr>
-  <th>No</th>
-  <th>Timestamp</th>
-  <th>Tanggal</th>
-  <th>Nama</th>
-  <th>Jenis</th>
-  <th>Jumlah Masuk</th>
-  <th>Jumlah Keluar</th>
-  <th>Keterangan</th>
-  <th>Foto Bukti</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
+  <!-- FILTER -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body row g-3 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label">Kode</label>
+        <input type="text" id="kode" class="form-control">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Bulan</label>
+        <select id="bulan" class="form-select">
+          <option value="1">Januari</option>
+          <option value="2">Februari</option>
+          <option value="3">Maret</option>
+          <option value="4">April</option>
+          <option value="5">Mei</option>
+          <option value="6">Juni</option>
+          <option value="7">Juli</option>
+          <option value="8">Agustus</option>
+          <option value="9">September</option>
+          <option value="10">Oktober</option>
+          <option value="11">November</option>
+          <option value="12">Desember</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-primary w-100" onclick="tampilKas()">Tampilkan</button>
+      </div>
+    </div>
+  </div>
 
-<p>Total Masuk: <span id="totalMasuk">0</span></p>
-<p>Total Keluar: <span id="totalKeluar">0</span></p>
+  <!-- TABEL -->
+  <div class="table-responsive shadow-sm">
+    <table class="table table-bordered table-striped" id="tabel">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Timestamp</th>
+          <th>Tanggal</th>
+          <th>Nama</th>
+          <th>Jenis</th>
+          <th>Jumlah Masuk</th>
+          <th>Jumlah Keluar</th>
+          <th>Keterangan</th>
+          <th>Foto Bukti</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
+  <!-- TOTAL -->
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="alert alert-success fw-semibold">
+        Total Masuk: <span id="totalMasuk">0</span>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="alert alert-danger fw-semibold">
+        Total Keluar: <span id="totalKeluar">0</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="text-center py-3 mt-5">
+  &copy; 2025 Sukho Nedho. All rights reserved.
+</footer>
+
+<!-- SCRIPT ASLI (TIDAK DIUBAH) -->
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxOke50DE-_UqLcGawoG6Vxd6suNHg0axjC06iMpdx9hSuKZQ5BuXrut_ckzxsLak-1Ww/exec"; // ganti dengan URL Web App
+const API_URL = "https://script.google.com/macros/s/AKfycbxOke50DE-_UqLcGawoG6Vxd6suNHg0axjC06iMpdx9hSuKZQ5BuXrut_ckzxsLak-1Ww/exec";
 
-// Fungsi format rupiah
 function formatRupiah(angka){
   return "Rp " + Number(angka).toLocaleString('id-ID');
 }
@@ -79,10 +162,10 @@ function tampilKas(){
         var tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${i+1}</td>
-          <td>${row[0]}</td>  <!-- Timestamp -->
-          <td>${row[1]}</td>  <!-- Tanggal -->
-          <td>${row[2]}</td>  <!-- Nama -->
-          <td>${row[3]}</td>  <!-- Jenis -->
+          <td>${row[0]}</td>
+          <td>${row[1]}</td>
+          <td>${row[2]}</td>
+          <td>${row[3]}</td>
           <td>${formatRupiah(row[4])}</td>
           <td>${formatRupiah(row[5])}</td>
           <td>${row[6]}</td>
@@ -98,5 +181,6 @@ function tampilKas(){
 }
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
