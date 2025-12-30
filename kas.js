@@ -1,4 +1,4 @@
-const API = "https://script.google.com/macros/s/AKfycbxF-jPKXMFkLZONHbV1VitBdY0o9WmP5NMlwSYJTDdDr9nfA2mhZ5iGO4ElXsyq-f6Zww/exec"; // ganti dengan URL Web App
+const API = "https://script.google.com/macros/s/AKfycbxMcv8ZFEHMh9P7NFOp5o4kMvGEEBrj8axMZZFvrNHPtYjqoDSXGFICnpvckHpwo11b2A/exec"; // ganti dengan URL Web App
 
 let role="";
 
@@ -98,3 +98,4 @@ function deleteKas(id){
 function logout(){
   location.href="index.html";
 }
+
