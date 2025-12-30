@@ -33,26 +33,27 @@
 <button onclick="tampilKas()">Tampilkan</button>
 
 <table id="tabel">
-  <thead>
-    <tr>
-      <th>No</th>
-      <th>Tanggal</th>
-      <th>Nama</th>
-      <th>Jenis</th>
-      <th>Jumlah Masuk</th>
-      <th>Jumlah Keluar</th>
-      <th>Keterangan</th>
-      <th>Foto Bukti</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
+<thead>
+<tr>
+  <th>No</th>
+  <th>Timestamp</th>
+  <th>Tanggal</th>
+  <th>Nama</th>
+  <th>Jenis</th>
+  <th>Jumlah Masuk</th>
+  <th>Jumlah Keluar</th>
+  <th>Keterangan</th>
+  <th>Foto Bukti</th>
+</tr>
+</thead>
+<tbody></tbody>
 </table>
 
 <p>Total Masuk: <span id="totalMasuk">0</span></p>
 <p>Total Keluar: <span id="totalKeluar">0</span></p>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzfjZg0onE0kvu0iCZ-ULisSdx2OEiuIdGNS17nJZh-lehCFHzb2JlL6YxgHckAacadqQ/exec"; // ganti dengan URL Web App
+const API_URL = "https://script.google.com/macros/s/AKfycbxOke50DE-_UqLcGawoG6Vxd6suNHg0axjC06iMpdx9hSuKZQ5BuXrut_ckzxsLak-1Ww/exec"; // ganti dengan URL Web App
 
 // Fungsi format rupiah
 function formatRupiah(angka){
@@ -74,31 +75,24 @@ function tampilKas(){
       var tbody = document.querySelector("#tabel tbody");
       tbody.innerHTML = "";
 
-      let totalMasuk = 0;
-      let totalKeluar = 0;
-
       res.data.forEach((row,i)=>{
-        const masuk = Number(row[3]) || 0;
-        const keluar = Number(row[4]) || 0;
-        totalMasuk += masuk;
-        totalKeluar += keluar;
-
         var tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${i+1}</td>
-          <td>${row[0]}</td>
-          <td>${row[1]}</td>
-          <td>${row[2]}</td>
-          <td>${formatRupiah(masuk)}</td>
-          <td>${formatRupiah(keluar)}</td>
-          <td>${row[5]}</td>
-          <td>${row[6]?`<img src="${row[6]}" onclick="window.open('${row[6]}')" />`:"-"}</td>
+          <td>${row[0]}</td>  <!-- Timestamp -->
+          <td>${row[1]}</td>  <!-- Tanggal -->
+          <td>${row[2]}</td>  <!-- Nama -->
+          <td>${row[3]}</td>  <!-- Jenis -->
+          <td>${formatRupiah(row[4])}</td>
+          <td>${formatRupiah(row[5])}</td>
+          <td>${row[6]}</td>
+          <td>${row[7]?`<img src="${row[7]}" onclick="window.open('${row[7]}')" />`:"-"}</td>
         `;
         tbody.appendChild(tr);
       });
 
-      document.getElementById("totalMasuk").textContent = formatRupiah(totalMasuk);
-      document.getElementById("totalKeluar").textContent = formatRupiah(totalKeluar);
+      document.getElementById("totalMasuk").textContent = formatRupiah(res.totalMasuk);
+      document.getElementById("totalKeluar").textContent = formatRupiah(res.totalKeluar);
     })
     .catch(err => alert("Gagal ambil data: "+err));
 }
