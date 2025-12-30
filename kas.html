@@ -3,184 +3,66 @@
 <head>
 <meta charset="UTF-8">
 <title>Kas Sukho Nedho</title>
-<style>
-body { font-family: Arial; padding:20px }
-input, select, button { padding:6px; margin:4px }
-table { border-collapse: collapse; width:100%; margin-top:10px }
-td, th { border:1px solid #ccc; padding:6px }
-.hidden { display:none }
-</style>
+<link rel="stylesheet" href="kas.css">
 </head>
 <body>
-
 <h2>Kas Sukho Nedho</h2>
 
 <!-- LOGIN -->
-<div id="loginBox">
-  <input id="email" placeholder="Email"><br>
-  <input id="password" type="password" placeholder="Password"><br>
+<div id="loginDiv">
+  <h3>Login Kas</h3>
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password" />
   <button onclick="login()">Login</button>
-  <p id="msg" style="color:red"></p>
 </div>
 
-<!-- APP -->
-<div id="app" class="hidden">
+<!-- MAIN CONTENT -->
+<div id="mainDiv" style="display:none">
 
-  <p>
-    Login sebagai: <b><span id="roleText"></span></b>
-    <button onclick="logout()">Logout</button>
-  </p>
+  <button onclick="logout()">Logout</button>
 
-  <!-- INPUT KAS (ADMIN SAJA) -->
-  <div id="formKas">
-    <h3>Input Kas</h3>
-    <input type="date" id="tanggal"><br>
-    <input placeholder="Nama Transaksi" id="nama"><br>
-    <select id="jenis">
-      <option>Masuk</option>
-      <option>Keluar</option>
-    </select><br>
-    <input type="number" id="jumlah" placeholder="Jumlah"><br>
-    <input placeholder="Keterangan" id="ket"><br>
-    <input type="file" id="foto"><br>
-    <!-- Tambahkan type="button" supaya tombol bisa diklik -->
-    <button type="button" onclick="simpan()">Simpan</button>
-  </div>
+  <h3>Filter Bulan</h3>
+  <select id="bulan" onchange="loadKas()">
+    <option value="">Semua</option>
+    <option value="2026-01">Januari 2026</option>
+    <option value="2026-02">Februari 2026</option>
+    <!-- Tambah bulan lain sesuai kebutuhan -->
+  </select>
 
-  <h3>Total Saldo: Rp <span id="total">0</span></h3>
-
-  <table>
+  <h3>Tabel Kas</h3>
+  <table id="tabel">
     <thead>
       <tr>
         <th>Tanggal</th>
-        <th>Nama</th>
+        <th>Nama Transaksi</th>
         <th>Jenis</th>
         <th>Jumlah</th>
         <th>Keterangan</th>
         <th>Foto</th>
+        <th>Aksi</th>
       </tr>
     </thead>
-    <tbody id="tabel"></tbody>
+    <tbody></tbody>
   </table>
+
+  <h3>Total Kas: <span id="totalKas">0</span></h3>
+
+  <!-- FORM TAMBAH KAS (Admin only) -->
+  <div id="adminForm" style="display:none">
+    <h3>Tambah Kas</h3>
+    <input id="tgl" type="date">
+    <input id="nama" placeholder="Nama Transaksi">
+    <select id="jenis">
+      <option>Masuk</option>
+      <option>Keluar</option>
+    </select>
+    <input id="jumlah" type="number" placeholder="Jumlah">
+    <input id="ket" placeholder="Keterangan">
+    <input id="foto" type="file">
+    <button onclick="addKas()">Simpan</button>
+  </div>
 </div>
 
-<script>
-const API = "https://script.google.com/macros/s/AKfycbxMO-B4IlCBI3Lk5rxhGQ9DTxsTeWBUIx3DlYG4lH-Ifo_VCYEH9pYsX9_NguB3iyrU/exec";
-
-// ELEMENT
-const loginBox = document.getElementById("loginBox");
-const app = document.getElementById("app");
-const formKas = document.getElementById("formKas");
-const msg = document.getElementById("msg");
-const roleText = document.getElementById("roleText");
-const tabel = document.getElementById("tabel");
-const totalEl = document.getElementById("total");
-
-let ROLE = "";
-
-// LOGIN
-function login() {
-  fetch(API, {
-    method: "POST",
-    body: JSON.stringify({
-      action: "login",
-      email: email.value,
-      password: password.value
-    })
-  })
-  .then(r => r.json())
-  .then(d => {
-    if (d.status === "ok") {
-      ROLE = d.role;
-      roleText.innerText = ROLE;
-      loginBox.classList.add("hidden");
-      app.classList.remove("hidden");
-      if (ROLE !== "admin") formKas.style.display = "none";
-      loadKas();
-    } else {
-      msg.innerText = "LOGIN GAGAL";
-    }
-  });
-}
-
-// SIMPAN KAS
-function simpan() {
-  console.log("Tombol simpan diklik!"); // debug
-  const f = foto.files[0];
-  const r = new FileReader();
-
-  const kirim = (fotoBase64, fotoType) => {
-    fetch(API, {
-      method:"POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action:"addKas",
-        tanggal:tanggal.value,
-        nama:nama.value,
-        jenis:jenis.value,
-        jumlah:jumlah.value,
-        keterangan:ket.value,
-        foto: fotoBase64,
-        fotoType: fotoType
-      })
-    })
-    .then(r => r.json())
-    .then(d => {
-      if(d.status === "ok") {
-        alert("Data berhasil disimpan!");
-        loadKas();  // refresh tabel
-        // reset form
-        tanggal.value="";
-        nama.value="";
-        jenis.value="Masuk";
-        jumlah.value="";
-        ket.value="";
-        foto.value="";
-      } else {
-        alert("Gagal menyimpan data!");
-      }
-    })
-    .catch(err => console.error(err));
-  };
-
-  if(f){
-    r.onload = () => kirim(r.result.split(",")[1], f.type);
-    r.readAsDataURL(f);
-  } else {
-    kirim("", "");
-  }
-}
-
-// LOAD DATA
-function loadKas() {
-  fetch(API, {
-    method:"POST",
-    body:JSON.stringify({ action:"getKas" })
-  })
-  .then(r=>r.json())
-  .then(d=>{
-    tabel.innerHTML="";
-    let total = 0;
-    d.forEach(r=>{
-      total += (r[2]==="Masuk"? r[3] : -r[3]);
-      tabel.innerHTML += `
-        <tr>
-          <td>${r[0]}</td>
-          <td>${r[1]}</td>
-          <td>${r[2]}</td>
-          <td>${r[3]}</td>
-          <td>${r[4]}</td>
-          <td>${r[5]?`<a href="${r[5]}" target="_blank">Foto</a>`:""}</td>
-        </tr>`;
-    });
-    totalEl.innerText = total;
-  });
-}
-
-function logout(){
-  location.reload();
-}
-</script>
-
+<script src="kas.js"></script>
 </body>
 </html>
