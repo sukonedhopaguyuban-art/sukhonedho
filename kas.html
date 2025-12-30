@@ -141,7 +141,15 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxOke50DE-_UqLcGawoG6Vx
 function formatRupiah(angka){
   return "Rp " + Number(angka).toLocaleString('id-ID');
 }
-
+function formatTanggal(tgl){
+  if(!tgl) return "-";
+  const d = new Date(tgl);
+  return d.toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric"
+  });
+}
 function tampilKas(){
   var kode = document.getElementById("kode").value;
   var bulan = document.getElementById("bulan").value;
@@ -161,7 +169,7 @@ function tampilKas(){
         var tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${i+1}</td>
-          <td>${row[1]}</td>
+          <td>${formatTanggal(row[1])}</td>
           <td>${row[2]}</td>
           <td>${row[3]}</td>
           <td>${formatRupiah(row[4])}</td>
