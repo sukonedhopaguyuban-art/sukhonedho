@@ -4,14 +4,17 @@
 <meta charset="UTF-8">
 <title>Menu Kas</title>
 <style>
-table, th, td { border:1px solid #ccc; border-collapse:collapse; padding:5px; }
-img { max-width:100px; cursor:pointer; }
+  table, th, td { border:1px solid #ccc; border-collapse:collapse; padding:5px; }
+  img { max-width:100px; cursor:pointer; }
 </style>
 </head>
 <body>
 
 <h2>Menu Kas</h2>
-<label>Kode:</label><input type="text" id="kode"><br><br>
+
+<label>Kode:</label>
+<input type="text" id="kode"><br><br>
+
 <label>Bulan:</label>
 <select id="bulan">
   <option value="1">Januari</option>
@@ -30,54 +33,74 @@ img { max-width:100px; cursor:pointer; }
 <button onclick="tampilKas()">Tampilkan</button>
 
 <table id="tabel">
-<thead>
-<tr>
-<th>No</th>
-<th>Tanggal</th>
-<th>Nama</th>
-<th>Jenis</th>
-<th>Jumlah Masuk</th>
-<th>Jumlah Keluar</th>
-<th>Keterangan</th>
-<th>Foto Bukti</th>
-</tr>
-</thead>
-<tbody></tbody>
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Tanggal</th>
+      <th>Nama</th>
+      <th>Jenis</th>
+      <th>Jumlah Masuk</th>
+      <th>Jumlah Keluar</th>
+      <th>Keterangan</th>
+      <th>Foto Bukti</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
 </table>
 
 <p>Total Masuk: <span id="totalMasuk">0</span></p>
 <p>Total Keluar: <span id="totalKeluar">0</span></p>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzfjZg0onE0kvu0iCZ-ULisSdx2OEiuIdGNS17nJZh-lehCFHzb2JlL6YxgHckAacadqQ/exec"; // ganti dengan URL Web App yang sudah dideploy
+const API_URL = "https://script.google.com/macros/s/AKfycbzfjZg0onE0kvu0iCZ-ULisSdx2OEiuIdGNS17nJZh-lehCFHzb2JlL6YxgHckAacadqQ/exec"; // ganti dengan URL Web App
+
+// Fungsi format rupiah
+function formatRupiah(angka){
+  return "Rp " + Number(angka).toLocaleString('id-ID');
+}
 
 function tampilKas(){
   var kode = document.getElementById("kode").value;
   var bulan = document.getElementById("bulan").value;
 
   fetch(`${API_URL}?kode=${kode}&bulan=${bulan}`)
-    .then(r => r.json())
+    .then(res => res.json())
     .then(res => {
+      if(res.msg){
+        alert(res.msg);
+        return;
+      }
+
       var tbody = document.querySelector("#tabel tbody");
       tbody.innerHTML = "";
+
+      let totalMasuk = 0;
+      let totalKeluar = 0;
+
       res.data.forEach((row,i)=>{
+        const masuk = Number(row[3]) || 0;
+        const keluar = Number(row[4]) || 0;
+        totalMasuk += masuk;
+        totalKeluar += keluar;
+
         var tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${i+1}</td>
           <td>${row[0]}</td>
           <td>${row[1]}</td>
           <td>${row[2]}</td>
-          <td>${row[3]}</td>
-          <td>${row[4]}</td>
+          <td>${formatRupiah(masuk)}</td>
+          <td>${formatRupiah(keluar)}</td>
           <td>${row[5]}</td>
           <td>${row[6]?`<img src="${row[6]}" onclick="window.open('${row[6]}')" />`:"-"}</td>
         `;
         tbody.appendChild(tr);
       });
-      document.getElementById("totalMasuk").textContent = res.totalMasuk;
-      document.getElementById("totalKeluar").textContent = res.totalKeluar;
+
+      document.getElementById("totalMasuk").textContent = formatRupiah(totalMasuk);
+      document.getElementById("totalKeluar").textContent = formatRupiah(totalKeluar);
     })
-    .catch(err=>alert("Gagal ambil data: "+err));
+    .catch(err => alert("Gagal ambil data: "+err));
 }
 </script>
 
